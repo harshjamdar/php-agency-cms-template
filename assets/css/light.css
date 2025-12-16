@@ -16,6 +16,47 @@ body.theme-light {
     color: var(--light-text);
     font-family: 'Plus Jakarta Sans', sans-serif;
     line-height: 1.6; /* Improved readability */
+
+    --hero-bg: var(--light-bg);
+    --hero-panel: #ffffff;
+    --hero-border: var(--light-border);
+    --hero-text: var(--light-text);
+    --hero-heading: #0f172a;
+    --hero-muted: var(--light-text-muted);
+    --hero-chip-bg: rgba(15, 23, 42, 0.06);
+    --hero-chip-border: var(--light-border);
+    --hero-code-bg: #f8fafc;
+    --hero-glow-primary: rgba(79, 70, 229, 0.12);
+    --hero-glow-secondary: rgba(6, 182, 212, 0.12);
+    --hero-grad-from: #0ea5e9;
+    --hero-grad-mid: #2563eb;
+    --hero-grad-to: #7c3aed;
+}
+
+/* Improve badge readability in light hero */
+.theme-light .hero-card .bg-gray-800\/90,
+.theme-light .hero-card .bg-gray-800\/50,
+.theme-light .hero-card .bg-gray-800,
+.theme-light .hero-card .bg-gray-950 {
+    background-color: #0f172a !important;
+    color: #f8fafc !important;
+    border: 1px solid var(--light-border) !important;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.22);
+}
+
+.theme-light .hero-card .text-gray-400,
+.theme-light .hero-card .text-gray-300 {
+    color: #e2e8f0 !important;
+}
+
+.theme-light .hero-card .text-white {
+    color: #f8fafc !important;
+}
+
+.theme-light .hero-card .text-green-400,
+.theme-light .hero-card .text-blue-400,
+.theme-light .hero-card .text-secondary {
+    color: #c7d2fe !important;
 }
 
 .theme-light .bg-background {
@@ -134,4 +175,15 @@ body.theme-light {
 .theme-light footer {
     background-color: var(--light-bg-alt) !important;
     border-top: 1px solid var(--light-border) !important;
+}
+
+/* Portfolio category badge contrast */
+.theme-light .project-category-badge {
+    background-color: var(--light-primary) !important;
+    border-color: var(--light-primary-hover) !important;
+}
+
+.theme-light .project-category-label,
+.theme-light .project-category-badge .text-white {
+    color: #ffffff !important;
 }

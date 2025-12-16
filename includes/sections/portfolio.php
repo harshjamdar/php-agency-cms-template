@@ -52,8 +52,8 @@ try {
                         <?php endif; ?>
                         
                         <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
-                        <div class="absolute bottom-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
-                            <span class="text-xs font-semibold text-white tracking-wide uppercase"><?php echo htmlspecialchars($project['category']); ?></span>
+                        <div class="absolute bottom-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-white/10 project-category-badge">
+                            <span class="text-xs font-semibold text-white tracking-wide uppercase project-category-label"><?php echo htmlspecialchars($project['category']); ?></span>
                         </div>
                     </div>
                     <div class="p-6">

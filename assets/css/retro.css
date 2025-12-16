@@ -18,6 +18,18 @@ body.theme-retro {
         linear-gradient(var(--retro-grid) 1px, transparent 1px),
         linear-gradient(90deg, var(--retro-grid) 1px, transparent 1px);
     background-size: 20px 20px;
+
+    --hero-bg: var(--retro-bg);
+    --hero-panel: #111;
+    --hero-border: var(--retro-text);
+    --hero-text: var(--retro-text);
+    --hero-heading: #ffffff;
+    --hero-muted: #c5f0c5;
+    --hero-chip-bg: #111;
+    --hero-chip-border: var(--retro-text);
+    --hero-code-bg: #000000;
+    --hero-glow-primary: rgba(255, 0, 255, 0.2);
+    --hero-glow-secondary: rgba(0, 255, 255, 0.2);
 }
 
 .theme-retro h1, 

@@ -1,7 +1,10 @@
 <?php
 require_once 'config.php';
 require_once 'security.php';
+require_once __DIR__ . '/includes/popup-schema.php';
 checkLogin();
+
+ensurePopupsTable($pdo);
 
 // Handle Delete
 if (isset($_POST['delete_id']) && validateCSRFToken($_POST['csrf_token'] ?? '')) {

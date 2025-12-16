@@ -18,6 +18,18 @@ body.theme-cyberpunk {
         linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
     background-size: 40px 40px;
+
+    --hero-bg: var(--cyber-bg);
+    --hero-panel: #0a0a0f;
+    --hero-border: rgba(0, 243, 255, 0.25);
+    --hero-text: var(--cyber-text);
+    --hero-heading: #fcee0a;
+    --hero-muted: #9adfea;
+    --hero-chip-bg: rgba(0, 243, 255, 0.12);
+    --hero-chip-border: rgba(255, 0, 60, 0.4);
+    --hero-code-bg: #04060b;
+    --hero-glow-primary: rgba(0, 243, 255, 0.18);
+    --hero-glow-secondary: rgba(255, 0, 60, 0.18);
 }
 
 .theme-cyberpunk h1,

@@ -17,6 +17,18 @@ body.theme-glass {
         radial-gradient(circle at 15% 50%, rgba(139, 92, 246, 0.15), transparent 25%),
         radial-gradient(circle at 85% 30%, rgba(236, 72, 153, 0.15), transparent 25%);
     background-attachment: fixed;
+
+    --hero-bg: var(--glass-bg);
+    --hero-panel: rgba(255, 255, 255, 0.08);
+    --hero-border: var(--glass-border);
+    --hero-text: var(--glass-text);
+    --hero-heading: #ffffff;
+    --hero-muted: rgba(226, 232, 240, 0.9);
+    --hero-chip-bg: rgba(255, 255, 255, 0.14);
+    --hero-chip-border: rgba(255, 255, 255, 0.2);
+    --hero-code-bg: rgba(0, 0, 0, 0.55);
+    --hero-glow-primary: rgba(139, 92, 246, 0.28);
+    --hero-glow-secondary: rgba(236, 72, 153, 0.22);
 }
 
 .theme-glass .bg-slate-950,
@@ -71,4 +83,19 @@ body.theme-glass {
 /* Text Glow */
 .theme-glass h1, .theme-glass h2 {
     text-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+}
+
+/* Portfolio category badge contrast */
+.theme-glass .project-category-badge {
+    background-color: rgba(15, 23, 42, 0.8) !important;
+    border: 1px solid var(--glass-border) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+}
+
+.theme-glass .project-category-label,
+.theme-glass .project-category-badge .text-white {
+    color: #f8fafc !important;
+    font-weight: 600;
 }

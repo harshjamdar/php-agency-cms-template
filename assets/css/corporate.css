@@ -16,6 +16,38 @@ body.theme-corporate {
     color: var(--corp-text);
     font-family: 'Roboto', sans-serif;
     line-height: 1.6;
+
+    --hero-bg: var(--corp-bg);
+    --hero-panel: var(--corp-white);
+    --hero-border: var(--corp-border);
+    --hero-text: var(--corp-text);
+    --hero-heading: var(--corp-primary);
+    --hero-muted: var(--corp-text-light);
+    --hero-chip-bg: rgba(0, 0, 0, 0.04);
+    --hero-chip-border: var(--corp-border);
+    --hero-code-bg: #f8f9fa;
+    --hero-glow-primary: rgba(0, 86, 179, 0.12);
+    --hero-glow-secondary: rgba(13, 110, 253, 0.1);
+    --hero-grad-from: #0d6efd;
+    --hero-grad-mid: #0b5ed7;
+    --hero-grad-to: #0a58ca;
+}
+
+/* Improve stat badge readability in hero */
+.theme-corporate .hero-card .bg-gray-800\/90,
+.theme-corporate .hero-card .bg-gray-800\/50,
+.theme-corporate .hero-card .bg-gray-800,
+.theme-corporate .hero-card .bg-gray-950 {
+    background-color: #0f172a !important;
+    color: #f8fafc !important;
+    border: 1px solid var(--corp-border) !important;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.22);
+}
+
+.theme-corporate .hero-card .text-gray-400,
+.theme-corporate .hero-card .text-gray-300,
+.theme-corporate .hero-card .text-white {
+    color: #e9ecef !important;
 }
 
 /* Fix visibility of colored icons on white background */
@@ -126,6 +158,19 @@ body.theme-corporate {
 .theme-corporate footer {
     background-color: var(--corp-primary) !important;
     color: #fff !important;
+}
+
+/* Portfolio category badge contrast */
+.theme-corporate .project-category-badge {
+    background-color: var(--corp-primary) !important;
+    border: 1px solid var(--corp-border) !important;
+    box-shadow: 0 8px 18px rgba(0, 86, 179, 0.25);
+}
+
+.theme-corporate .project-category-label,
+.theme-corporate .project-category-badge .text-white {
+    color: #ffffff !important;
+    font-weight: 600;
 }
 
 .theme-corporate footer .text-slate-400 {

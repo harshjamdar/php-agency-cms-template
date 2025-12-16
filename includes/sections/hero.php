@@ -40,7 +40,7 @@ try {
 }
 ?>
 <!-- Hero Section -->
-<section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+<section class="hero-section relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
     <!-- Background Decor -->
     <div class="absolute top-0 right-0 -mr-20 -mt-20 w-[500px] h-[500px] bg-secondary/20 rounded-full blur-[100px] pointer-events-none animate-pulse-slow"></div>
     <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[100px] pointer-events-none animate-pulse-slow" style="animation-delay: 2s;"></div>
@@ -50,16 +50,16 @@ try {
             
             <!-- Text Content -->
             <div class="fade-in-up">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 mb-6 backdrop-blur-sm hover:bg-white/10 transition-colors cursor-default">
+                <div class="hero-chip inline-flex items-center gap-2 px-3 py-1 rounded-full mb-6 backdrop-blur-sm hover:bg-white/10 transition-colors cursor-default">
                     <span class="flex h-2 w-2 rounded-full bg-secondary animate-pulse"></span>
                     <span class="text-sm font-medium text-gray-300">Custom software development company for startups</span>
                 </div>
                 
-                <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight mb-6">
+                <h1 class="hero-title text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight mb-6">
                     <?php echo $headline; ?>
                 </h1>
                 
-                <p class="text-lg md:text-xl text-gray-400 mb-8 leading-relaxed max-w-lg">
+                <p class="hero-subtitle text-lg md:text-xl text-gray-400 mb-8 leading-relaxed max-w-lg">
                     We turn your ideas into digital reality. From <span class="text-gray-200 font-semibold">custom Android apps</span> to <span class="text-gray-200 font-semibold">high-ROI digital marketing campaigns</span>, we fuel business growth.
                 </p>
                 
@@ -96,7 +96,7 @@ try {
 
             <!-- Visual Content -->
             <div class="relative fade-in-up" style="animation-delay: 0.2s;">
-                <div class="relative rounded-2xl bg-gradient-to-br from-gray-900/90 to-black/90 border border-white/10 p-6 shadow-2xl backdrop-blur-xl">
+                <div class="hero-card relative rounded-2xl bg-gradient-to-br from-gray-900/90 to-black/90 border border-white/10 p-6 shadow-2xl backdrop-blur-xl">
                     <!-- Floating Cards -->
                     <div class="absolute -top-6 -right-6 bg-gray-800/90 backdrop-blur-md p-4 rounded-xl border border-white/10 shadow-xl z-20 animate-float">
                         <div class="flex items-center gap-3">
@@ -123,7 +123,7 @@ try {
                     </div>
 
                     <!-- Code Snippet Visual -->
-                    <div class="rounded-lg bg-gray-950 p-4 font-mono text-sm border border-white/5 overflow-hidden">
+                    <div class="hero-code rounded-lg bg-gray-950 p-4 font-mono text-sm border border-white/5 overflow-hidden">
                         <div class="flex gap-1.5 mb-4">
                             <div class="w-3 h-3 rounded-full bg-red-500/50"></div>
                             <div class="w-3 h-3 rounded-full bg-yellow-500/50"></div>

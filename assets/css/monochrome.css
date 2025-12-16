@@ -13,6 +13,18 @@ body.theme-monochrome {
     color: var(--mono-text);
     font-family: 'Lato', sans-serif;
     line-height: 1.6;
+
+    --hero-bg: var(--mono-bg);
+    --hero-panel: #111111;
+    --hero-border: #444444;
+    --hero-text: var(--mono-text);
+    --hero-heading: #ffffff;
+    --hero-muted: #aaaaaa;
+    --hero-chip-bg: #1a1a1a;
+    --hero-chip-border: #444444;
+    --hero-code-bg: #0b0b0b;
+    --hero-glow-primary: rgba(255, 255, 255, 0.08);
+    --hero-glow-secondary: rgba(255, 255, 255, 0.05);
 }
 
 .theme-monochrome h1,

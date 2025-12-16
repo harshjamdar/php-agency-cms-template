@@ -13,6 +13,57 @@ body.theme-brutalism {
     background-color: var(--brutal-bg);
     color: var(--brutal-black);
     font-family: 'Space Grotesk', sans-serif;
+
+    --hero-bg: var(--brutal-bg);
+    --hero-panel: #ffffff;
+    --hero-border: var(--brutal-black);
+    --hero-text: var(--brutal-black);
+    --hero-heading: #000000;
+    --hero-muted: #333333;
+    --hero-chip-bg: var(--brutal-primary);
+    --hero-chip-border: var(--brutal-black);
+    --hero-code-bg: #ffffff;
+    --hero-glow-primary: rgba(163, 230, 53, 0.2);
+    --hero-glow-secondary: rgba(244, 114, 182, 0.2);
+    --hero-grad-from: #111111;
+    --hero-grad-mid: #2b2b2b;
+    --hero-grad-to: #000000;
+}
+
+.theme-brutalism .hero-title .text-transparent {
+    background-image: none !important;
+    color: #000000 !important;
+}
+
+/* Improve stat badge readability in hero */
+.theme-brutalism .hero-card .bg-gray-800\/90,
+.theme-brutalism .hero-card .bg-gray-800\/50,
+.theme-brutalism .hero-card .bg-gray-800,
+.theme-brutalism .hero-card .bg-gray-950 {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border: 3px solid var(--brutal-black) !important;
+    box-shadow: 4px 4px 0px var(--brutal-black) !important;
+}
+
+.theme-brutalism .hero-card .text-gray-400,
+.theme-brutalism .hero-card .text-gray-300,
+.theme-brutalism .hero-card .text-white {
+    color: #000000 !important;
+}
+
+/* Portfolio category badge contrast */
+.theme-brutalism .project-category-badge {
+    background-color: var(--brutal-primary) !important;
+    border: 3px solid var(--brutal-black) !important;
+    box-shadow: 3px 3px 0px var(--brutal-black) !important;
+    border-radius: 0 !important;
+}
+
+.theme-brutalism .project-category-label,
+.theme-brutalism .project-category-badge .text-white {
+    color: #000000 !important;
+    font-weight: 700;
 }
 
 .theme-brutalism .bg-background {
