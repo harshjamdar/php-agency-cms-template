@@ -1,0 +1,139 @@
+/* Neo-Brutalism Theme */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap');
+
+:root {
+    --brutal-bg: #fffdf5; /* Off white */
+    --brutal-black: #000000;
+    --brutal-primary: #a3e635; /* Lime */
+    --brutal-secondary: #f472b6; /* Pink */
+    --brutal-accent: #60a5fa; /* Blue */
+}
+
+body.theme-brutalism {
+    background-color: var(--brutal-bg);
+    color: var(--brutal-black);
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+.theme-brutalism .bg-background {
+    background-color: var(--brutal-bg) !important;
+}
+
+.theme-brutalism .text-foreground,
+.theme-brutalism .text-white {
+    color: var(--brutal-black) !important;
+    font-weight: 500;
+}
+
+.theme-brutalism .text-slate-300,
+.theme-brutalism .text-slate-400,
+.theme-brutalism .text-gray-300,
+.theme-brutalism .text-gray-400 {
+    color: #333333 !important; /* Dark Gray for hierarchy */
+    font-weight: 500;
+}
+
+.theme-brutalism .bg-slate-950,
+.theme-brutalism .bg-slate-900,
+.theme-brutalism .bg-slate-800,
+.theme-brutalism .bg-slate-900\/80,
+.theme-brutalism .bg-slate-900\/50,
+.theme-brutalism .bg-slate-800\/50,
+.theme-brutalism .bg-accent,
+.theme-brutalism .bg-accent\/30 {
+    background-color: #ffffff !important;
+    border: 3px solid var(--brutal-black) !important;
+    box-shadow: 5px 5px 0px var(--brutal-black) !important;
+    border-radius: 0 !important;
+    color: var(--brutal-black) !important;
+}
+
+/* Fix for Estimator Result Box */
+.theme-brutalism .bg-slate-950 {
+    background-color: var(--brutal-primary) !important; /* Highlight result box */
+    border: 3px solid var(--brutal-black) !important;
+}
+
+/* Fix for Inactive Buttons in Estimator */
+.theme-brutalism .bg-slate-800 {
+    background-color: #ffffff !important;
+    color: var(--brutal-black) !important;
+}
+
+.theme-brutalism .bg-slate-800:hover {
+    background-color: #eeeeee !important;
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px var(--brutal-black) !important;
+}
+
+/* Fix icon container visibility */
+.theme-brutalism .bg-background\/50 {
+    background-color: var(--brutal-primary) !important;
+    border: 3px solid var(--brutal-black) !important;
+    border-radius: 0 !important;
+}
+
+/* Ensure icons are black inside the primary colored box */
+.theme-brutalism .bg-background\/50 svg {
+    color: #000000 !important;
+}
+
+.theme-brutalism .group:hover .bg-slate-800\/50 {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0px var(--brutal-black) !important;
+}
+
+.theme-brutalism .bg-primary {
+    background-color: var(--brutal-primary) !important;
+    color: var(--brutal-black) !important;
+    border: 3px solid var(--brutal-black);
+    box-shadow: 4px 4px 0px var(--brutal-black);
+    border-radius: 0 !important;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.theme-brutalism .bg-primary:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px var(--brutal-black);
+}
+
+.theme-brutalism .text-primary {
+    color: #000 !important;
+    background-color: var(--brutal-primary);
+    padding: 0 4px;
+}
+
+.theme-brutalism .text-secondary {
+    color: #000 !important;
+    background-color: var(--brutal-secondary);
+    padding: 0 4px;
+}
+
+/* Navbar */
+.theme-brutalism nav {
+    background-color: var(--brutal-bg) !important;
+    border-bottom: 3px solid var(--brutal-black) !important;
+}
+
+/* Inputs */
+.theme-brutalism input,
+.theme-brutalism textarea,
+.theme-brutalism select {
+    background-color: #fff !important;
+    border: 3px solid var(--brutal-black) !important;
+    color: var(--brutal-black) !important;
+    border-radius: 0 !important;
+    box-shadow: 3px 3px 0px rgba(0,0,0,0.2);
+}
+
+.theme-brutalism input:focus {
+    box-shadow: 5px 5px 0px var(--brutal-primary);
+    outline: none;
+}
+
+/* Images */
+.theme-brutalism img {
+    border: 3px solid var(--brutal-black);
+    border-radius: 0 !important;
+}

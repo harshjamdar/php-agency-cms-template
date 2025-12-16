@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /includes/
+Disallow: /config.php
+Disallow: /composer.json
+Disallow: /composer.lock
+Disallow: /package.json
+Disallow: /package-lock.json
+Disallow: /.env
+Disallow: /.git
+Disallow: /.github
+Disallow: /logs/
+
+# Please replace [YOUR_DOMAIN] with your actual domain name (e.g., https://example.com)
+Sitemap: [YOUR_DOMAIN]/sitemap.php

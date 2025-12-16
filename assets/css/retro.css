@@ -1,0 +1,155 @@
+/* Retro Theme Styles */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+:root {
+    --retro-bg: #000000;
+    --retro-text: #00ff00;
+    --retro-primary: #ff00ff;
+    --retro-secondary: #00ffff;
+    --retro-accent: #ffff00;
+    --retro-grid: rgba(0, 255, 0, 0.1);
+}
+
+body.theme-retro {
+    font-family: 'Press Start 2P', cursive;
+    background-color: var(--retro-bg);
+    color: var(--retro-text);
+    background-image: 
+        linear-gradient(var(--retro-grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--retro-grid) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+.theme-retro h1, 
+.theme-retro h2, 
+.theme-retro h3, 
+.theme-retro h4, 
+.theme-retro h5, 
+.theme-retro h6 {
+    font-family: 'Press Start 2P', cursive;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 0px var(--retro-primary);
+    letter-spacing: 1px;
+    line-height: 1.5;
+}
+
+.theme-retro p {
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    line-height: 1.6;
+}
+
+.theme-retro .bg-slate-900,
+.theme-retro .bg-slate-950,
+.theme-retro .bg-slate-800 {
+    background-color: #111 !important;
+    border: 2px solid var(--retro-text);
+    box-shadow: 4px 4px 0px var(--retro-primary);
+    border-radius: 0 !important;
+}
+
+.theme-retro .bg-slate-900\/50,
+.theme-retro .bg-slate-950\/80 {
+    background-color: rgba(0, 0, 0, 0.9) !important;
+    border-bottom: 2px solid var(--retro-text);
+}
+
+.theme-retro .text-slate-300,
+.theme-retro .text-slate-400,
+.theme-retro .text-gray-300,
+.theme-retro .text-gray-400 {
+    color: #cccccc !important;
+}
+
+.theme-retro .text-white {
+    color: #ffffff !important;
+    text-shadow: 2px 2px 0px #000;
+}
+
+.theme-retro .bg-primary {
+    background-color: var(--retro-primary) !important;
+    border: 2px solid #fff;
+    box-shadow: 4px 4px 0px #fff;
+    color: #fff !important;
+    border-radius: 0 !important;
+}
+
+.theme-retro .bg-primary:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px #fff;
+}
+
+.theme-retro .text-primary {
+    color: var(--retro-primary) !important;
+}
+
+.theme-retro .text-secondary {
+    color: var(--retro-secondary) !important;
+}
+
+.theme-retro .border-white\/10 {
+    border-color: var(--retro-text) !important;
+}
+
+/* Retro Button Styles */
+.theme-retro button, 
+.theme-retro a.bg-primary {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.7rem !important;
+    padding: 10px 20px !important;
+    text-transform: uppercase;
+}
+
+/* Retro Input Styles */
+.theme-retro input, 
+.theme-retro textarea, 
+.theme-retro select {
+    background-color: #000 !important;
+    border: 2px solid var(--retro-text) !important;
+    color: var(--retro-text) !important;
+    font-family: 'Courier New', monospace;
+    border-radius: 0 !important;
+}
+
+.theme-retro input:focus, 
+.theme-retro textarea:focus, 
+.theme-retro select:focus {
+    box-shadow: 0 0 10px var(--retro-text);
+    outline: none;
+}
+
+/* Retro Card Hover */
+.theme-retro .group:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px var(--retro-secondary);
+}
+
+/* CRT Effect Overlay */
+.theme-retro::before {
+    content: " ";
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    z-index: 9999;
+    background-size: 100% 2px, 3px 100%;
+    pointer-events: none;
+}
+
+/* Glitch Effect for Headings */
+@keyframes glitch {
+    0% { transform: translate(0) }
+    20% { transform: translate(-2px, 2px) }
+    40% { transform: translate(-2px, -2px) }
+    60% { transform: translate(2px, 2px) }
+    80% { transform: translate(2px, -2px) }
+    100% { transform: translate(0) }
+}
+
+.theme-retro h1:hover {
+    animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+    color: var(--retro-accent);
+}

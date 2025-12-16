@@ -1,0 +1,27 @@
+# Custom Error Pages
+ErrorDocument 404 /404.php
+
+# Protect sensitive files
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+<FilesMatch "^(composer\.json|composer\.lock|package\.json|package-lock\.json|config\.php)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Protect Directories
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^includes/ - [F,L]
+    RewriteRule ^admin/includes/ - [F,L]
+    RewriteRule ^logs/ - [F,L]
+</IfModule>
+
+# Optional: Enable URL Rewriting if needed for pretty URLs
+# RewriteEngine On
+# RewriteCond %{REQUEST_FILENAME} !-f
+# RewriteCond %{REQUEST_FILENAME} !-d
+# RewriteRule ^(.*)$ index.php [L]

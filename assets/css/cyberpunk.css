@@ -1,0 +1,105 @@
+/* Cyberpunk Theme */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --cyber-bg: #050505;
+    --cyber-panel: #0a0a0a;
+    --cyber-primary: #00f3ff; /* Cyan */
+    --cyber-secondary: #ff003c; /* Red/Pink */
+    --cyber-accent: #fcee0a; /* Yellow */
+    --cyber-text: #e0e0e0;
+}
+
+body.theme-cyberpunk {
+    background-color: var(--cyber-bg);
+    color: var(--cyber-text);
+    font-family: 'Rajdhani', sans-serif;
+    background-image: 
+        linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+}
+
+.theme-cyberpunk h1,
+.theme-cyberpunk h2,
+.theme-cyberpunk h3,
+.theme-cyberpunk h4,
+.theme-cyberpunk h5,
+.theme-cyberpunk h6 {
+    font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.theme-cyberpunk .bg-slate-950,
+.theme-cyberpunk .bg-slate-900,
+.theme-cyberpunk .bg-slate-800 {
+    background-color: rgba(10, 10, 10, 0.8) !important;
+    border: 1px solid var(--cyber-primary);
+    box-shadow: 0 0 10px rgba(0, 243, 255, 0.1);
+    clip-path: polygon(
+        0 0, 
+        100% 0, 
+        100% calc(100% - 15px), 
+        calc(100% - 15px) 100%, 
+        0 100%
+    );
+}
+
+.theme-cyberpunk .bg-slate-900\/50,
+.theme-cyberpunk .bg-slate-800\/50 {
+    background-color: rgba(5, 5, 5, 0.9) !important;
+    border: 1px solid rgba(0, 243, 255, 0.3);
+}
+
+.theme-cyberpunk .text-primary {
+    color: var(--cyber-primary) !important;
+    text-shadow: 0 0 5px var(--cyber-primary);
+}
+
+.theme-cyberpunk .bg-primary {
+    background-color: transparent !important;
+    border: 1px solid var(--cyber-primary);
+    color: var(--cyber-primary) !important;
+    box-shadow: 0 0 10px rgba(0, 243, 255, 0.3), inset 0 0 10px rgba(0, 243, 255, 0.1);
+    font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.theme-cyberpunk .bg-primary:hover {
+    background-color: var(--cyber-primary) !important;
+    color: #000 !important;
+    box-shadow: 0 0 20px var(--cyber-primary);
+}
+
+.theme-cyberpunk .text-secondary {
+    color: var(--cyber-secondary) !important;
+}
+
+/* Glitch effect on hover for cards */
+.theme-cyberpunk .group:hover {
+    border-color: var(--cyber-secondary) !important;
+    box-shadow: 0 0 15px rgba(255, 0, 60, 0.3);
+}
+
+/* Inputs */
+.theme-cyberpunk input,
+.theme-cyberpunk textarea,
+.theme-cyberpunk select {
+    background-color: #000 !important;
+    border: 1px solid var(--cyber-primary) !important;
+    color: var(--cyber-primary) !important;
+    font-family: 'Rajdhani', sans-serif;
+}
+
+/* Scrollbar */
+.theme-cyberpunk ::-webkit-scrollbar-thumb {
+    background: var(--cyber-secondary);
+    border-radius: 0;
+}
+
+.theme-cyberpunk ::-webkit-scrollbar-track {
+    background: #000;
+    border-left: 1px solid var(--cyber-primary);
+}

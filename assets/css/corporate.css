@@ -1,0 +1,141 @@
+/* Corporate Blue Theme */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+:root {
+    --corp-bg: #f0f2f5;
+    --corp-white: #ffffff;
+    --corp-primary: #0056b3; /* Brighter Professional Blue */
+    --corp-secondary: #d9534f; /* Muted Red/Orange */
+    --corp-text: #212529; /* Dark Grey/Black */
+    --corp-text-light: #495057; /* Medium Grey */
+    --corp-border: #dee2e6;
+}
+
+body.theme-corporate {
+    background-color: var(--corp-bg);
+    color: var(--corp-text);
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+}
+
+/* Fix visibility of colored icons on white background */
+.theme-corporate .text-blue-400 { color: #0d6efd !important; }
+.theme-corporate .text-purple-400 { color: #6f42c1 !important; }
+.theme-corporate .text-green-400 { color: #198754 !important; }
+.theme-corporate .text-orange-400 { color: #fd7e14 !important; }
+.theme-corporate .text-cyan-400 { color: #0dcaf0 !important; }
+.theme-corporate .text-indigo-400 { color: #6610f2 !important; }
+.theme-corporate .text-red-400 { color: #dc3545 !important; }
+.theme-corporate .text-pink-400 { color: #d63384 !important; }
+
+.theme-corporate .bg-background {
+    background-color: var(--corp-bg) !important;
+}
+
+.theme-corporate .text-foreground {
+    color: var(--corp-text) !important;
+}
+
+.theme-corporate .bg-slate-950,
+.theme-corporate .bg-slate-900,
+.theme-corporate .bg-slate-800,
+.theme-corporate .bg-accent,
+.theme-corporate .bg-accent\/30 {
+    background-color: var(--corp-white) !important;
+    border: 1px solid var(--corp-border) !important;
+    border-radius: 4px !important;
+    color: var(--corp-text) !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.theme-corporate .bg-slate-900\/80,
+.theme-corporate .bg-slate-900\/50,
+.theme-corporate .bg-slate-800\/50 {
+    background-color: var(--corp-white) !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    border: 1px solid var(--corp-border);
+    color: var(--corp-text) !important;
+}
+
+/* Fix for Estimator Result Box */
+.theme-corporate .bg-slate-950 {
+    background-color: #f8f9fa !important; /* Light gray for contrast */
+    border: 1px solid var(--corp-border) !important;
+}
+
+/* Fix for Inactive Buttons in Estimator */
+.theme-corporate .bg-slate-800 {
+    background-color: #ffffff !important;
+    border: 1px solid var(--corp-border) !important;
+    color: var(--corp-text) !important;
+}
+
+.theme-corporate .bg-slate-800:hover {
+    background-color: #e9ecef !important;
+}
+
+/* Fix icon container visibility */
+.theme-corporate .bg-background\/50 {
+    background-color: #f1f5f9 !important; /* Slate 100 */
+    border: 1px solid var(--corp-border) !important;
+}
+
+.theme-corporate .text-white {
+    color: var(--corp-text) !important;
+}
+
+.theme-corporate .text-slate-300,
+.theme-corporate .text-slate-400,
+.theme-corporate .text-gray-300,
+.theme-corporate .text-gray-400 {
+    color: var(--corp-text-light) !important;
+}
+
+.theme-corporate .bg-primary {
+    background-color: var(--corp-primary) !important;
+    color: #fff !important;
+    border-radius: 4px !important;
+}
+
+.theme-corporate .text-primary {
+    color: var(--corp-primary) !important;
+}
+
+.theme-corporate .text-secondary {
+    color: var(--corp-secondary) !important;
+}
+
+/* Navbar */
+.theme-corporate nav {
+    background-color: var(--corp-primary) !important;
+    border-bottom: none !important;
+}
+
+.theme-corporate nav .text-white,
+.theme-corporate nav .text-gray-300 {
+    color: #ffffff !important;
+    opacity: 0.9;
+}
+
+.theme-corporate nav .text-gray-300:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+/* Footer */
+.theme-corporate footer {
+    background-color: var(--corp-primary) !important;
+    color: #fff !important;
+}
+
+.theme-corporate footer .text-slate-400 {
+    color: rgba(255,255,255,0.7) !important;
+}
+
+/* Headings */
+.theme-corporate h1, 
+.theme-corporate h2, 
+.theme-corporate h3 {
+    color: var(--corp-primary) !important;
+    font-weight: 700;
+}

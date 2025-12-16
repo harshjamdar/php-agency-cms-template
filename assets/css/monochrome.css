@@ -1,0 +1,89 @@
+/* Monochrome Theme */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap');
+
+:root {
+    --mono-bg: #000000;
+    --mono-text: #ffffff;
+    --mono-gray: #333333;
+    --mono-light-gray: #888888;
+}
+
+body.theme-monochrome {
+    background-color: var(--mono-bg);
+    color: var(--mono-text);
+    font-family: 'Lato', sans-serif;
+    line-height: 1.6;
+}
+
+.theme-monochrome h1,
+.theme-monochrome h2,
+.theme-monochrome h3,
+.theme-monochrome h4 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.theme-monochrome .bg-slate-950,
+.theme-monochrome .bg-slate-900,
+.theme-monochrome .bg-slate-800,
+.theme-monochrome .bg-slate-900\/50,
+.theme-monochrome .bg-slate-800\/50 {
+    background-color: #111111 !important; /* Slightly lighter than black for separation */
+    border: 1px solid #444444 !important; /* Brighter border */
+    border-radius: 0 !important;
+}
+
+.theme-monochrome .text-primary,
+.theme-monochrome .text-secondary {
+    color: #ffffff !important;
+    text-decoration: underline;
+    text-decoration-thickness: 2px; /* Thicker underline */
+    text-underline-offset: 4px;
+    font-weight: 700; /* Bold for visibility */
+}
+
+.theme-monochrome .bg-primary {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border-radius: 0 !important;
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.theme-monochrome .bg-primary:hover {
+    background-color: #cccccc !important;
+}
+
+.theme-monochrome .text-slate-300,
+.theme-monochrome .text-slate-400 {
+    color: #aaaaaa !important;
+}
+
+/* Navbar */
+.theme-monochrome nav {
+    background-color: #000 !important;
+    border-bottom: 1px solid #333 !important;
+}
+
+/* Images */
+.theme-monochrome img {
+    filter: grayscale(100%);
+    transition: filter 0.3s;
+}
+
+.theme-monochrome img:hover {
+    filter: grayscale(0%);
+}
+
+/* Inputs */
+.theme-monochrome input,
+.theme-monochrome textarea,
+.theme-monochrome select {
+    background-color: #000 !important;
+    border: 1px solid #fff !important;
+    color: #fff !important;
+    border-radius: 0 !important;
+}

@@ -1,0 +1,74 @@
+/* Glassmorphism Theme */
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
+
+:root {
+    --glass-bg: #0f172a;
+    --glass-card: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-text: #ffffff;
+    --glass-primary: #8b5cf6;
+}
+
+body.theme-glass {
+    background-color: var(--glass-bg);
+    color: var(--glass-text);
+    font-family: 'Quicksand', sans-serif;
+    background-image: 
+        radial-gradient(circle at 15% 50%, rgba(139, 92, 246, 0.15), transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(236, 72, 153, 0.15), transparent 25%);
+    background-attachment: fixed;
+}
+
+.theme-glass .bg-slate-950,
+.theme-glass .bg-slate-900,
+.theme-glass .bg-slate-800,
+.theme-glass .bg-slate-900\/50,
+.theme-glass .bg-slate-800\/50 {
+    background-color: var(--glass-card) !important;
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid var(--glass-border) !important;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    border-radius: 16px !important;
+}
+
+.theme-glass .bg-primary {
+    background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.18);
+    box-shadow: 0 8px 32px 0 rgba(0,0,0,0.37);
+    color: #fff !important;
+    border-radius: 30px !important;
+}
+
+.theme-glass .bg-primary:hover {
+    background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05));
+}
+
+/* Navbar */
+.theme-glass nav {
+    background-color: rgba(15, 23, 42, 0.6) !important;
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--glass-border);
+}
+
+/* Inputs */
+.theme-glass input,
+.theme-glass textarea,
+.theme-glass select {
+    background-color: rgba(0, 0, 0, 0.2) !important;
+    border: 1px solid var(--glass-border) !important;
+    color: #fff !important;
+    border-radius: 12px !important;
+}
+
+/* Images */
+.theme-glass img {
+    border-radius: 16px !important;
+}
+
+/* Text Glow */
+.theme-glass h1, .theme-glass h2 {
+    text-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+}

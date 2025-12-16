@@ -1,0 +1,137 @@
+/* Minimalist Light Theme */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+    --light-bg: #f1f5f9; /* Slate 100 - Darker for better contrast with cards */
+    --light-bg-alt: #ffffff;
+    --light-text: #0f172a; /* Slate 900 */
+    --light-text-muted: #475569; /* Slate 600 - Darker for readability */
+    --light-primary: #4f46e5; /* Indigo 600 */
+    --light-primary-hover: #4338ca;
+    --light-border: #cbd5e1; /* Slate 300 */
+}
+
+body.theme-light {
+    background-color: var(--light-bg);
+    color: var(--light-text);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    line-height: 1.6; /* Improved readability */
+}
+
+.theme-light .bg-background {
+    background-color: var(--light-bg) !important;
+}
+
+.theme-light .text-foreground {
+    color: var(--light-text) !important;
+}
+
+.theme-light .bg-slate-950,
+.theme-light .bg-slate-900,
+.theme-light .bg-slate-800,
+.theme-light .bg-accent,
+.theme-light .bg-accent\/30 {
+    background-color: #ffffff !important;
+    border-color: var(--light-border) !important;
+    color: var(--light-text) !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.theme-light .bg-slate-950\/80,
+.theme-light .bg-slate-900\/80,
+.theme-light .bg-slate-900\/50,
+.theme-light .bg-slate-800\/50 {
+    background-color: #ffffff !important;
+    backdrop-filter: none; /* Remove blur for cleaner look */
+    border: 1px solid var(--light-border);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Fix for Estimator Result Box */
+.theme-light .bg-slate-950 {
+    background-color: var(--light-bg) !important; /* Use light gray for nested boxes */
+    border-color: var(--light-border) !important;
+}
+
+/* Fix for Inactive Buttons in Estimator */
+.theme-light .bg-slate-800 {
+    background-color: #ffffff !important;
+    border-color: var(--light-border) !important;
+    color: var(--light-text) !important;
+}
+
+.theme-light .bg-slate-800:hover {
+    background-color: var(--light-bg) !important;
+}
+
+/* Fix icon container visibility */
+.theme-light .bg-background\/50 {
+    background-color: var(--light-bg) !important;
+    border: 1px solid var(--light-border) !important;
+}
+
+.theme-light .text-slate-300,
+.theme-light .text-slate-400,
+.theme-light .text-gray-300,
+.theme-light .text-gray-400,
+.theme-light .text-slate-200,
+.theme-light .text-slate-100,
+.theme-light .text-gray-200,
+.theme-light .text-gray-100 {
+    color: var(--light-text-muted) !important;
+}
+
+.theme-light .text-white {
+    color: var(--light-text) !important;
+}
+
+.theme-light .bg-primary {
+    background-color: var(--light-primary) !important;
+    color: #ffffff !important;
+}
+
+.theme-light .text-primary {
+    color: var(--light-primary) !important;
+}
+
+.theme-light .border-white\/10,
+.theme-light .border-white\/5 {
+    border-color: var(--light-border) !important;
+}
+
+/* Card Styles */
+.theme-light .group:hover {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+    transform: translateY(-2px);
+}
+
+/* Navbar specific */
+.theme-light nav {
+    background-color: rgba(255, 255, 255, 0.8) !important;
+    border-bottom: 1px solid var(--light-border) !important;
+}
+
+.theme-light nav .text-white {
+    color: var(--light-text) !important;
+}
+
+/* Inputs */
+.theme-light input,
+.theme-light textarea,
+.theme-light select {
+    background-color: var(--light-bg-alt) !important;
+    border: 1px solid var(--light-border) !important;
+    color: var(--light-text) !important;
+}
+
+.theme-light input:focus,
+.theme-light textarea:focus {
+    border-color: var(--light-primary) !important;
+    ring: 2px solid var(--light-primary) !important;
+}
+
+/* Footer */
+.theme-light footer {
+    background-color: var(--light-bg-alt) !important;
+    border-top: 1px solid var(--light-border) !important;
+}
