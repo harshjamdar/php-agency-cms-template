@@ -76,6 +76,7 @@ class DatabaseManager
             $this->createBookingsTable();
             $this->createSiteSettingsTable();
             $this->createTestimonialsTable();
+            $this->createPopupsTable();
             $this->updateUsersTableWithRoles();
 
             return true;
@@ -466,6 +467,26 @@ class DatabaseManager
         )";
         $this->pdo->exec($sql);
         $this->addMessage("✓ Table 'testimonials' created");
+    }
+
+    /**
+     * Create popups table for exit-intent and timed popups
+     *
+     * @return void
+     */
+    private function createPopupsTable(): void
+    {
+        $sql = "CREATE TABLE IF NOT EXISTS popups (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            title VARCHAR(255) NOT NULL,
+            content TEXT,
+            trigger_type VARCHAR(50) DEFAULT 'exit',
+            trigger_value INT DEFAULT 0,
+            is_active TINYINT(1) DEFAULT 1,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )";
+        $this->pdo->exec($sql);
+        $this->addMessage("✓ Table 'popups' created");
     }
 
     /**

@@ -1,43 +1,5 @@
 <?php
-// A/B Testing Logic
 $headline = 'Build <span class="text-transparent bg-clip-text bg-gradient-to-r from-secondary via-blue-400 to-primary animate-gradient-x">Scalable Software</span> & SEO-Driven Websites';
-$activeVariantId = null;
-
-try {
-    if (!isset($pdo)) {
-        require_once __DIR__ . '/../../config.php';
-    }
-    
-    // Check for active experiment
-    $stmt = $pdo->prepare("SELECT id FROM ab_tests WHERE test_key = 'hero_headline' AND is_active = 1");
-    $stmt->execute();
-    $test = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($test) {
-        // Check if user already has a variant assigned
-        $sessionKey = 'ab_test_' . $test['id'];
-        
-        if (isset($_COOKIE[$sessionKey])) {
-            $variantName = $_COOKIE[$sessionKey];
-        } else {
-            // Randomly assign A or B
-            $variantName = (rand(0, 1) === 0) ? 'A' : 'B';
-            setcookie($sessionKey, $variantName, time() + (86400 * 30), "/"); // 30 days
-        }
-
-        // Fetch content for assigned variant
-        $stmt = $pdo->prepare("SELECT id, content FROM ab_variants WHERE test_id = ? AND variant_name = ?");
-        $stmt->execute([$test['id'], $variantName]);
-        $variant = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($variant) {
-            $headline = $variant['content'];
-            $activeVariantId = $variant['id'];
-        }
-    }
-} catch (Exception $e) {
-    // Fallback to default
-}
 ?>
 <!-- Hero Section -->
 <section class="hero-section relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
@@ -73,26 +35,6 @@ try {
                     </a>
                 </div>
             </div>
-
-            <?php if ($activeVariantId): ?>
-            <script>
-                // Track View
-                fetch('api/track-ab.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ type: 'view', variant_id: <?php echo $activeVariantId; ?> })
-                });
-
-                // Track Click
-                document.getElementById('hero-cta-btn').addEventListener('click', function() {
-                    fetch('api/track-ab.php', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ type: 'click', variant_id: <?php echo $activeVariantId; ?> })
-                    });
-                });
-            </script>
-            <?php endif; ?>
 
             <!-- Visual Content -->
             <div class="relative fade-in-up" style="animation-delay: 0.2s;">

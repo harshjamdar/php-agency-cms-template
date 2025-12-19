@@ -70,10 +70,6 @@
             <i data-lucide="message-square-plus" class="w-5 h-5"></i>
             <span>Popups</span>
         </a>
-        <a href="ab-testing.php" class="flex items-center gap-3 px-4 py-3 <?php echo basename($_SERVER['PHP_SELF']) == 'ab-testing.php' ? 'bg-primary/10 text-primary border border-primary/20' : 'text-slate-400 hover:text-white hover:bg-white/5'; ?> rounded-lg transition-colors">
-            <i data-lucide="flask-conical" class="w-5 h-5"></i>
-            <span>A/B Testing</span>
-        </a>
         <a href="users.php" class="flex items-center gap-3 px-4 py-3 <?php echo basename($_SERVER['PHP_SELF']) == 'users.php' ? 'bg-primary/10 text-primary border border-primary/20' : 'text-slate-400 hover:text-white hover:bg-white/5'; ?> rounded-lg transition-colors">
             <i data-lucide="shield" class="w-5 h-5"></i>
             <span>Users & Roles</span>
