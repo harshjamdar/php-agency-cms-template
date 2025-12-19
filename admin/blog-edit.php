@@ -1,5 +1,6 @@
 <?php
 require_once 'config.php';
+require_once __DIR__ . '/../includes/helpers/seo-helper.php';
 checkLogin();
 
 $id = isset($_GET['id']) ? validateId($_GET['id']) : null;
@@ -31,6 +32,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $content = $_POST['content'] ?? '';
         $status = in_array($_POST['status'] ?? '', ['draft', 'published']) ? $_POST['status'] : 'draft';
         $is_featured = isset($_POST['is_featured']) ? 1 : 0;
+        
+        // SEO Fields
+        $meta_title = sanitizeInput($_POST['meta_title'] ?? '', 255);
+        $meta_description = sanitizeInput($_POST['meta_description'] ?? '', 500);
+        $meta_keywords = sanitizeInput($_POST['meta_keywords'] ?? '', 500);
+        $og_title = sanitizeInput($_POST['og_title'] ?? '', 255);
+        $og_description = sanitizeInput($_POST['og_description'] ?? '', 500);
+        
+        // Handle OG Image Upload
+        $og_image = $post ? ($post['og_image'] ?? '') : '';
+        if (isset($_FILES['og_image']) && $_FILES['og_image']['error'] === UPLOAD_ERR_OK) {
+            $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            $file = $_FILES['og_image'];
+            
+            if (in_array($file['type'], $allowed_types) && $file['size'] <= 5000000) {
+                $upload_dir = '../assets/images/og/';
+                if (!is_dir($upload_dir)) {
+                    mkdir($upload_dir, 0755, true);
+                }
+                
+                $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+                $filename = 'blog_og_' . time() . '_' . uniqid() . '.' . $extension;
+                $upload_path = $upload_dir . $filename;
+                
+                if (move_uploaded_file($file['tmp_name'], $upload_path)) {
+                    $og_image = 'assets/images/og/' . $filename;
+                    
+                    // Delete old OG image if exists
+                    if ($post && !empty($post['og_image']) && $post['og_image'] !== $og_image) {
+                        $old_image = '../' . $post['og_image'];
+                        if (file_exists($old_image)) {
+                            unlink($old_image);
+                        }
+                    }
+                }
+            }
+        }
         
         // Validate required fields
         if (empty($title)) {
@@ -69,10 +107,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if (!$error) {
                 try {
+                    // Check if SEO columns exist, if not create them
+                    try {
+                        $pdo->exec("ALTER TABLE blog_posts 
+                            ADD COLUMN IF NOT EXISTS meta_title VARCHAR(255) DEFAULT NULL,
+                            ADD COLUMN IF NOT EXISTS meta_description TEXT DEFAULT NULL,
+                            ADD COLUMN IF NOT EXISTS meta_keywords TEXT DEFAULT NULL,
+                            ADD COLUMN IF NOT EXISTS og_title VARCHAR(255) DEFAULT NULL,
+                            ADD COLUMN IF NOT EXISTS og_description TEXT DEFAULT NULL,
+                            ADD COLUMN IF NOT EXISTS og_image VARCHAR(255) DEFAULT NULL");
+                    } catch (PDOException $e) {
+                        // Columns might already exist, continue
+                    }
+                    
                     if ($id) {
                         // Update
-                        $stmt = $pdo->prepare("UPDATE blog_posts SET title = ?, slug = ?, author = ?, excerpt = ?, content = ?, status = ?, is_featured = ?, image_url = ? WHERE id = ?");
-                        $stmt->execute([$title, $slug, $author, $excerpt, $content, $status, $is_featured, $image_url, $id]);
+                        $stmt = $pdo->prepare("UPDATE blog_posts SET title = ?, slug = ?, author = ?, excerpt = ?, content = ?, status = ?, is_featured = ?, image_url = ?, meta_title = ?, meta_description = ?, meta_keywords = ?, og_title = ?, og_description = ?, og_image = ? WHERE id = ?");
+                        $stmt->execute([$title, $slug, $author, $excerpt, $content, $status, $is_featured, $image_url, $meta_title, $meta_description, $meta_keywords, $og_title, $og_description, $og_image, $id]);
                         $success = "Post updated successfully.";
                         // Refresh post data
                         $stmt = $pdo->prepare("SELECT * FROM blog_posts WHERE id = ?");
@@ -80,8 +131,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $post = $stmt->fetch();
                     } else {
                         // Insert
-                        $stmt = $pdo->prepare("INSERT INTO blog_posts (title, slug, author, excerpt, content, status, is_featured, image_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-                        $stmt->execute([$title, $slug, $author, $excerpt, $content, $status, $is_featured, $image_url]);
+                        $stmt = $pdo->prepare("INSERT INTO blog_posts (title, slug, author, excerpt, content, status, is_featured, image_url, meta_title, meta_description, meta_keywords, og_title, og_description, og_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                        $stmt->execute([$title, $slug, $author, $excerpt, $content, $status, $is_featured, $image_url, $meta_title, $meta_description, $meta_keywords, $og_title, $og_description, $og_image]);
                         header("Location: blog.php?msg=created");
                         exit;
                     }
@@ -103,26 +154,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 include 'includes/header.php';
 ?>
 
-<div class="flex justify-between items-center mb-8">
-    <div>
-        <h1 class="text-3xl font-bold text-white mb-2"><?php echo $id ? 'Edit Post' : 'Write New Post'; ?></h1>
-        <p class="text-slate-400">Share your thoughts with the world.</p>
+<div class="mb-8 bg-gradient-to-br from-primary/10 via-purple-500/10 to-pink-500/10 border border-white/10 rounded-2xl p-6">
+    <div class="flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="p-3 bg-gradient-to-br from-primary to-purple-600 rounded-xl">
+                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-3xl font-bold text-white mb-1"><?php echo $id ? 'Edit Post' : 'Write New Post'; ?></h1>
+                <p class="text-slate-300">Share your thoughts with the world.</p>
+            </div>
+        </div>
+        <a href="blog.php" class="text-slate-300 hover:text-white flex items-center gap-2 transition-colors px-4 py-2 bg-slate-800/50 rounded-lg hover:bg-slate-700/50">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            Back to Blog
+        </a>
     </div>
-    <a href="blog.php" class="text-slate-400 hover:text-white flex items-center gap-2 transition-colors">
-        <i data-lucide="arrow-left" class="w-4 h-4"></i>
-        Back to Blog
-    </a>
 </div>
 
 <?php if ($error): ?>
-<div class="bg-red-500/10 text-red-400 p-4 rounded-lg mb-6 border border-red-500/20">
-    <?php echo $error; ?>
+<div class="bg-gradient-to-r from-red-500/10 to-pink-500/10 text-red-400 p-5 rounded-xl mb-6 border border-red-500/30 flex items-start gap-3">
+    <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+    </svg>
+    <div><?php echo $error; ?></div>
 </div>
 <?php endif; ?>
 
 <?php if ($success): ?>
-<div class="bg-green-500/10 text-green-400 p-4 rounded-lg mb-6 border border-green-500/20">
-    <?php echo $success; ?>
+<div class="bg-gradient-to-r from-green-500/10 to-emerald-500/10 text-green-400 p-5 rounded-xl mb-6 border border-green-500/30 flex items-start gap-3">
+    <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+    </svg>
+    <div><?php echo $success; ?></div>
 </div>
 <?php endif; ?>
 
@@ -195,6 +261,144 @@ include 'includes/header.php';
             <textarea name="content" class="tinymce-editor"><?php echo $post ? htmlspecialchars($post['content']) : ''; ?></textarea>
         </div>
 
+        <!-- SEO Section -->
+        <div class="border-t border-white/10 pt-6 mt-6">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="p-2 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-white">SEO Optimization</h3>
+                    <p class="text-slate-400 text-sm">Improve your blog post's visibility on search engines</p>
+                </div>
+            </div>
+
+            <!-- SEO Score Panel -->
+            <div id="seo-score-panel" class="mb-6 p-6 bg-gradient-to-br from-indigo-900/30 via-purple-900/30 to-pink-900/30 border border-purple-500/20 rounded-2xl backdrop-blur-sm">
+                <div class="flex items-center justify-between mb-4">
+                    <h4 class="text-lg font-semibold text-white">SEO Score</h4>
+                    <div class="flex items-center gap-3">
+                        <div class="text-right">
+                            <div class="text-3xl font-bold" id="seo-score-value" style="color: #64748b;">--</div>
+                            <div class="text-xs text-slate-400">out of 100</div>
+                        </div>
+                        <div class="w-20 h-20">
+                            <svg class="transform -rotate-90" width="80" height="80">
+                                <circle cx="40" cy="40" r="32" fill="none" stroke="#1e293b" stroke-width="8"></circle>
+                                <circle id="seo-score-circle" cx="40" cy="40" r="32" fill="none" stroke="#64748b" stroke-width="8"
+                                    stroke-dasharray="201" stroke-dashoffset="201" stroke-linecap="round"></circle>
+                            </svg>
+                            <div class="text-center -mt-16">
+                                <span id="seo-grade" class="text-2xl font-bold text-slate-400">--</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="seo-recommendations" class="space-y-2">
+                    <p class="text-slate-400 text-sm">Fill out the SEO fields below to see your score...</p>
+                </div>
+            </div>
+
+            <!-- SEO Preview -->
+            <div class="mb-6 bg-gradient-to-br from-blue-900/20 to-slate-900/20 border border-blue-500/20 rounded-2xl p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    <h4 class="text-lg font-semibold text-white">Google Search Preview</h4>
+                </div>
+                <div class="bg-white rounded-lg p-4">
+                    <div class="flex items-start gap-3">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-xs text-slate-600">codefiesta.in</span>
+                            </div>
+                            <div id="preview-title" class="text-xl text-blue-600 hover:underline cursor-pointer mb-1 break-words line-clamp-1">
+                                Your Blog Post Title Will Appear Here
+                            </div>
+                            <div id="preview-description" class="text-sm text-slate-700 leading-relaxed break-words line-clamp-2">
+                                Your meta description will appear here. Make it engaging to increase click-through rates!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-2">
+                        Meta Title <span id="meta-title-counter" class="text-slate-500 text-xs">(0/60)</span>
+                    </label>
+                    <input type="text" name="meta_title" id="meta_title" maxlength="60"
+                        value="<?php echo $post ? htmlspecialchars($post['meta_title'] ?? '') : ''; ?>"
+                        class="w-full bg-slate-950 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
+                        placeholder="Leave empty to use post title">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-2">Meta Keywords</label>
+                    <input type="text" name="meta_keywords" id="meta_keywords"
+                        value="<?php echo $post ? htmlspecialchars($post['meta_keywords'] ?? '') : ''; ?>"
+                        class="w-full bg-slate-950 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
+                        placeholder="keyword1, keyword2, keyword3">
+                </div>
+            </div>
+
+            <div class="mt-6">
+                <label class="block text-sm font-medium text-slate-300 mb-2">
+                    Meta Description <span id="meta-desc-counter" class="text-slate-500 text-xs">(0/160)</span>
+                </label>
+                <textarea name="meta_description" id="meta_description" maxlength="160" rows="3"
+                    class="w-full bg-slate-950 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
+                    placeholder="Leave empty to use excerpt"><?php echo $post ? htmlspecialchars($post['meta_description'] ?? '') : ''; ?></textarea>
+            </div>
+
+            <!-- Open Graph Section -->
+            <div class="border-t border-white/10 pt-6 mt-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="p-2 bg-gradient-to-br from-pink-500 to-purple-600 rounded-lg">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold text-white">Social Media (Open Graph)</h4>
+                        <p class="text-slate-400 text-sm">How your post appears when shared</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">OG Title</label>
+                        <input type="text" name="og_title" id="og_title" maxlength="60"
+                            value="<?php echo $post ? htmlspecialchars($post['og_title'] ?? '') : ''; ?>"
+                            class="w-full bg-slate-950 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
+                            placeholder="Leave empty to use meta title">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">OG Image</label>
+                        <input type="file" name="og_image" id="og_image" accept="image/*"
+                            class="w-full bg-slate-950 border border-white/10 rounded-lg px-4 py-2.5 text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary/80 file:cursor-pointer">
+                        <?php if ($post && !empty($post['og_image'])): ?>
+                            <div class="mt-2">
+                                <img src="../<?php echo htmlspecialchars($post['og_image']); ?>" alt="Current OG Image" class="h-20 rounded border border-white/10">
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <label class="block text-sm font-medium text-slate-300 mb-2">OG Description</label>
+                    <textarea name="og_description" id="og_description" maxlength="200" rows="2"
+                        class="w-full bg-slate-950 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
+                        placeholder="Leave empty to use meta description"><?php echo $post ? htmlspecialchars($post['og_description'] ?? '') : ''; ?></textarea>
+                </div>
+            </div>
+        </div>
+
         <!-- Submit Button -->
         <div class="pt-4 border-t border-white/10 flex justify-end">
             <button type="submit" class="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-lg font-medium transition-colors flex items-center gap-2">
@@ -205,5 +409,194 @@ include 'includes/header.php';
 
     </form>
 </div>
+
+<script>
+// SEO Score Calculator for Blog Posts
+function calculateBlogSEO() {
+    const title = document.querySelector('input[name="title"]').value;
+    const excerpt = document.querySelector('textarea[name="excerpt"]').value;
+    const metaTitle = document.getElementById('meta_title').value;
+    const metaDescription = document.getElementById('meta_description').value;
+    const metaKeywords = document.getElementById('meta_keywords').value;
+    const ogTitle = document.getElementById('og_title').value;
+    const ogDescription = document.getElementById('og_description').value;
+    
+    const data = {
+        page_title: metaTitle || title,
+        meta_description: metaDescription || excerpt,
+        meta_keywords: metaKeywords,
+        og_title: ogTitle || metaTitle || title,
+        og_description: ogDescription || metaDescription || excerpt,
+        og_image: '<?php echo $post ? ($post["og_image"] ?? "") : ""; ?>',
+        canonical_url: '',
+        robots: 'index, follow',
+        page_slug: '<?php echo $post ? $post["slug"] : ""; ?>'
+    };
+    
+    let score = 0;
+    const recommendations = [];
+    
+    // Title (20 points)
+    const titleLength = data.page_title.length;
+    if (titleLength === 0) {
+        recommendations.push({ type: 'error', message: 'Title is missing' });
+    } else if (titleLength >= 30 && titleLength <= 60) {
+        score += 20;
+        recommendations.push({ type: 'success', message: 'Title length is optimal' });
+    } else if (titleLength < 30) {
+        score += 10;
+        recommendations.push({ type: 'warning', message: 'Title is too short (optimal: 30-60 chars)' });
+    } else {
+        score += 15;
+        recommendations.push({ type: 'warning', message: 'Title is too long' });
+    }
+    
+    // Description (20 points)
+    const descLength = data.meta_description.length;
+    if (descLength === 0) {
+        recommendations.push({ type: 'error', message: 'Meta description is missing' });
+    } else if (descLength >= 120 && descLength <= 160) {
+        score += 20;
+        recommendations.push({ type: 'success', message: 'Meta description length is optimal' });
+    } else if (descLength < 70) {
+        score += 10;
+        recommendations.push({ type: 'warning', message: 'Meta description is too short' });
+    } else if (descLength >= 70 && descLength < 120) {
+        score += 15;
+        recommendations.push({ type: 'warning', message: 'Meta description could be longer' });
+    } else {
+        score += 15;
+        recommendations.push({ type: 'warning', message: 'Meta description is too long' });
+    }
+    
+    // Keywords (10 points)
+    if (data.meta_keywords) {
+        const keywordCount = data.meta_keywords.split(',').filter(k => k.trim()).length;
+        if (keywordCount >= 3 && keywordCount <= 10) {
+            score += 10;
+            recommendations.push({ type: 'success', message: 'Good number of keywords' });
+        } else if (keywordCount < 3) {
+            score += 5;
+            recommendations.push({ type: 'warning', message: 'Add more keywords (3-10 recommended)' });
+        } else {
+            score += 5;
+            recommendations.push({ type: 'warning', message: 'Too many keywords' });
+        }
+    } else {
+        recommendations.push({ type: 'info', message: 'Add keywords to improve SEO' });
+    }
+    
+    // Open Graph (30 points)
+    let ogScore = 0;
+    if (data.og_title) ogScore += 10;
+    else recommendations.push({ type: 'warning', message: 'OG title missing' });
+    
+    if (data.og_description) ogScore += 10;
+    else recommendations.push({ type: 'warning', message: 'OG description missing' });
+    
+    if (data.og_image) ogScore += 10;
+    else recommendations.push({ type: 'warning', message: 'OG image missing for social sharing' });
+    
+    if (ogScore === 30) recommendations.push({ type: 'success', message: 'All Open Graph tags present' });
+    score += ogScore;
+    
+    // Content quality bonus (20 points)
+    const content = document.querySelector('.tinymce-editor').value;
+    const wordCount = content.split(/\s+/).filter(w => w.length > 0).length;
+    if (wordCount >= 300) {
+        score += 20;
+        recommendations.push({ type: 'success', message: `Good content length (${wordCount} words)` });
+    } else if (wordCount >= 150) {
+        score += 15;
+        recommendations.push({ type: 'warning', message: `Content could be longer (${wordCount}/300+ words)` });
+    } else if (wordCount > 0) {
+        score += 10;
+        recommendations.push({ type: 'error', message: `Content is too short (${wordCount}/300+ words)` });
+    }
+    
+    // Calculate grade
+    let grade = 'F';
+    if (score >= 90) grade = 'A+';
+    else if (score >= 80) grade = 'A';
+    else if (score >= 70) grade = 'B';
+    else if (score >= 60) grade = 'C';
+    else if (score >= 50) grade = 'D';
+    
+    updateSEODisplay(score, grade, recommendations);
+    updatePreview();
+}
+
+function updateSEODisplay(score, grade, recommendations) {
+    document.getElementById('seo-score-value').textContent = score;
+    document.getElementById('seo-grade').textContent = grade;
+    
+    let color = '#ef4444';
+    if (score >= 80) color = '#22c55e';
+    else if (score >= 60) color = '#eab308';
+    else if (score >= 40) color = '#f97316';
+    
+    document.getElementById('seo-score-value').style.color = color;
+    document.getElementById('seo-grade').style.color = color;
+    document.getElementById('seo-score-circle').style.stroke = color;
+    
+    const circumference = 2 * Math.PI * 32;
+    const offset = circumference - (score / 100 * circumference);
+    document.getElementById('seo-score-circle').style.strokeDashoffset = offset;
+    
+    const recsContainer = document.getElementById('seo-recommendations');
+    const icons = { success: '✓', warning: '⚠', error: '✗', info: 'ℹ' };
+    const colors = {
+        success: 'text-green-400 bg-green-500/10 border-green-500/20',
+        warning: 'text-yellow-400 bg-yellow-500/10 border-yellow-500/20',
+        error: 'text-red-400 bg-red-500/10 border-red-500/20',
+        info: 'text-blue-400 bg-blue-500/10 border-blue-500/20'
+    };
+    
+    recsContainer.innerHTML = recommendations.map(rec => 
+        `<div class="flex items-start gap-2 p-3 ${colors[rec.type]} border rounded-lg">
+            <span class="font-bold">${icons[rec.type]}</span>
+            <span class="text-sm flex-1">${rec.message}</span>
+        </div>`
+    ).join('');
+}
+
+function updatePreview() {
+    const title = document.querySelector('input[name="title"]').value;
+    const excerpt = document.querySelector('textarea[name="excerpt"]').value;
+    const metaTitle = document.getElementById('meta_title').value;
+    const metaDescription = document.getElementById('meta_description').value;
+    
+    document.getElementById('preview-title').textContent = metaTitle || title || 'Your Blog Post Title Will Appear Here';
+    document.getElementById('preview-description').textContent = metaDescription || excerpt || 'Your meta description will appear here. Make it engaging!';
+}
+
+// Character counters
+document.getElementById('meta_title').addEventListener('input', function() {
+    const count = this.value.length;
+    const counter = document.getElementById('meta-title-counter');
+    counter.textContent = `(${count}/60)`;
+    counter.className = count > 60 ? 'text-red-400 text-xs' : count >= 50 ? 'text-green-400 text-xs' : 'text-slate-500 text-xs';
+    calculateBlogSEO();
+});
+
+document.getElementById('meta_description').addEventListener('input', function() {
+    const count = this.value.length;
+    const counter = document.getElementById('meta-desc-counter');
+    counter.textContent = `(${count}/160)`;
+    counter.className = count > 160 ? 'text-red-400 text-xs' : count >= 150 ? 'text-green-400 text-xs' : 'text-slate-500 text-xs';
+    calculateBlogSEO();
+});
+
+// Add listeners
+['meta_keywords', 'og_title', 'og_description'].forEach(id => {
+    document.getElementById(id)?.addEventListener('input', calculateBlogSEO);
+});
+
+document.querySelector('input[name="title"]').addEventListener('input', calculateBlogSEO);
+document.querySelector('textarea[name="excerpt"]').addEventListener('input', calculateBlogSEO);
+
+// Initial calculation
+calculateBlogSEO();
+</script>
 
 <?php include 'includes/footer.php'; ?>

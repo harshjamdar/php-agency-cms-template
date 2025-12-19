@@ -50,7 +50,7 @@ $envLoaded = loadFrontendEnv(__DIR__ . '/admin/.env');
 
 // Set Environment and Error Reporting
 if (!defined('APP_ENV')) {
-    define('APP_ENV', $_ENV['APP_ENV'] ?? 'production');
+    define('APP_ENV', $_ENV['APP_ENV'] ?? 'development'); // Changed to development to see errors
 }
 
 if (APP_ENV === 'development') {

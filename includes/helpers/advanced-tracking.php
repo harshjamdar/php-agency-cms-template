@@ -160,6 +160,10 @@ function getLocationFromIP($ip) {
 function getAnalyticsSession() {
     global $pdo;
     
+    if (!$pdo) {
+        return null;
+    }
+    
     // Check if session already exists
     if (isset($_SESSION['analytics_session_id'])) {
         $session_id = $_SESSION['analytics_session_id'];
@@ -245,6 +249,10 @@ function getAnalyticsSession() {
  */
 function trackAdvancedPageView($page_name, $page_url = null) {
     global $pdo;
+    
+    if (!$pdo) {
+        return false;
+    }
     
     if (!$page_url) {
         $page_url = $_SERVER['REQUEST_URI'] ?? '/';

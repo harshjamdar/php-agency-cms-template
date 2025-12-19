@@ -17,6 +17,10 @@ if (!defined('DB_HOST')) {
 function getSetting($key, $default = '') {
     global $pdo;
     
+    if (!$pdo) {
+        return $default;
+    }
+    
     try {
         $stmt = $pdo->prepare("SELECT setting_value FROM site_settings WHERE setting_key = ?");
         $stmt->execute([$key]);
@@ -34,6 +38,10 @@ function getSetting($key, $default = '') {
  */
 function getAllSettings() {
     global $pdo;
+    
+    if (!$pdo) {
+        return [];
+    }
     
     try {
         $stmt = $pdo->query("SELECT setting_key, setting_value FROM site_settings");
