@@ -70,6 +70,7 @@ class DatabaseManager
             $this->createAnalyticsPageviewsTable();
             $this->createSeoMetaTable();
             $this->createNewsletterSubscribersTable();
+            $this->createNewsletterCampaignsTable();
             $this->createFaqTable();
             $this->createServicesTable();
             $this->createBookingsTable();
@@ -319,15 +320,37 @@ class DatabaseManager
             email VARCHAR(100) NOT NULL UNIQUE,
             name VARCHAR(100),
             status ENUM('active', 'unsubscribed') DEFAULT 'active',
+            unsubscribe_token VARCHAR(64) UNIQUE,
             subscribed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             unsubscribed_at TIMESTAMP NULL,
             ip_address VARCHAR(45),
             source VARCHAR(50) DEFAULT 'website',
             INDEX idx_email (email),
-            INDEX idx_status (status)
+            INDEX idx_status (status),
+            INDEX idx_token (unsubscribe_token)
         )";
         $this->pdo->exec($sql);
         $this->addMessage("✓ Table 'newsletter_subscribers' created");
+    }
+
+    /**
+     * Create newsletter_campaigns table
+     *
+     * @return void
+     */
+    private function createNewsletterCampaignsTable(): void
+    {
+        $sql = "CREATE TABLE IF NOT EXISTS newsletter_campaigns (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            subject VARCHAR(255) NOT NULL,
+            content TEXT NOT NULL,
+            recipients_count INT DEFAULT 0,
+            sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            created_by INT,
+            INDEX idx_sent_at (sent_at)
+        )";
+        $this->pdo->exec($sql);
+        $this->addMessage("✓ Table 'newsletter_campaigns' created");
     }
 
     /**

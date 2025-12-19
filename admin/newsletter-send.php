@@ -24,10 +24,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && validateCSRFToken($_POST['csrf_toke
         $error = "Newsletter content is required.";
     } else {
         try {
-            // Get recipients
-            $sql = "SELECT email, name FROM newsletter_subscribers WHERE status = 'active'";
+            // Get recipients with unsubscribe tokens
+            $sql = "SELECT email, name, unsubscribe_token FROM newsletter_subscribers WHERE status = 'active'";
             if ($send_to === 'all') {
-                $sql = "SELECT email, name FROM newsletter_subscribers";
+                $sql = "SELECT email, name, unsubscribe_token FROM newsletter_subscribers";
             }
             
             $stmt = $pdo->query($sql);
@@ -41,10 +41,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && validateCSRFToken($_POST['csrf_toke
                 
                 // Send to each recipient
                 foreach ($recipients as $recipient) {
+                    // Generate unsubscribe link
+                    $unsubscribeUrl = $siteUrl . '/newsletter-unsubscribe.php?token=' . urlencode($recipient['unsubscribe_token']);
+                    
+                    // Add unsubscribe footer if not already present
+                    $contentWithFooter = $html_content;
+                    if (stripos($html_content, 'unsubscribe') === false) {
+                        $contentWithFooter .= '<div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 12px; color: #999; text-align: center;">';
+                        $contentWithFooter .= '<p><a href="' . htmlspecialchars($unsubscribeUrl) . '" style="color: #999;">Unsubscribe from this list</a></p>';
+                        $contentWithFooter .= '</div>';
+                    }
+                    
+                    // Personalize content
                     $personalized_content = str_replace(
-                        ['{{name}}', '{{email}}'],
-                        [$recipient['name'] ?? 'Subscriber', $recipient['email']],
-                        $html_content
+                        ['{{name}}', '{{email}}', '{{unsubscribe_url}}'],
+                        [$recipient['name'] ?? 'Subscriber', $recipient['email'], $unsubscribeUrl],
+                        $contentWithFooter
                     );
                     
                     if (sendEmail($recipient['email'], $subject, $personalized_content, $recipient['name'] ?? '')) {

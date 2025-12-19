@@ -67,6 +67,23 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <?php endif; ?>
 
 <?php if ($recaptcha_site_key): ?>
-<!-- Google reCAPTCHA -->
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<!-- Google reCAPTCHA v3 -->
+<script src="https://www.google.com/recaptcha/api.js?render=<?php echo htmlspecialchars($recaptcha_site_key); ?>"></script>
+<script>
+// Initialize reCAPTCHA v3 when page loads
+window.addEventListener('load', function() {
+    grecaptcha.ready(function() {
+        // Execute reCAPTCHA on page load to register activity
+        grecaptcha.execute('<?php echo htmlspecialchars($recaptcha_site_key); ?>', {action: 'homepage'})
+            .then(function(token) {
+                console.log('reCAPTCHA v3 initialized successfully');
+            });
+    });
+});
+
+// Helper function to get reCAPTCHA token for forms
+function getRecaptchaToken(action) {
+    return grecaptcha.execute('<?php echo htmlspecialchars($recaptcha_site_key); ?>', {action: action});
+}
+</script>
 <?php endif; ?>

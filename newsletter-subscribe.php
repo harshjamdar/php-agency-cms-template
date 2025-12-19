@@ -34,6 +34,52 @@ if (stripos($contentType, 'application/json') !== false) {
     $input = $_POST;
 }
 
+// Verify reCAPTCHA v3
+$recaptcha_token = $input['recaptcha_token'] ?? '';
+if (!function_exists('getApiSetting')) {
+    function getApiSetting($key) {
+        global $pdo;
+        try {
+            $stmt = $pdo->prepare("SELECT setting_value FROM api_settings WHERE setting_key = ? LIMIT 1");
+            $stmt->execute([$key]);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result ? $result['setting_value'] : null;
+        } catch (PDOException $e) {
+            return null;
+        }
+    }
+}
+$recaptcha_secret = getApiSetting('recaptcha_secret_key');
+
+if ($recaptcha_secret && $recaptcha_token) {
+    $recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify';
+    $recaptcha_data = [
+        'secret' => $recaptcha_secret,
+        'response' => $recaptcha_token,
+        'remoteip' => $_SERVER['REMOTE_ADDR'] ?? ''
+    ];
+    
+    $recaptcha_options = [
+        'http' => [
+            'method' => 'POST',
+            'header' => 'Content-Type: application/x-www-form-urlencoded',
+            'content' => http_build_query($recaptcha_data)
+        ]
+    ];
+    
+    $recaptcha_context = stream_context_create($recaptcha_options);
+    $recaptcha_result = @file_get_contents($recaptcha_url, false, $recaptcha_context);
+    
+    if ($recaptcha_result) {
+        $recaptcha_json = json_decode($recaptcha_result, true);
+        if (!$recaptcha_json['success'] || $recaptcha_json['score'] < 0.5) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Security verification failed']);
+            exit;
+        }
+    }
+}
+
 // Get input
 $email = filter_var($input['email'] ?? '', FILTER_VALIDATE_EMAIL);
 $name = sanitizeInput($input['name'] ?? '', 100);
@@ -67,9 +113,16 @@ try {
     // Get IP address
     $ip = getVisitorIP();
     
+    // Generate unique unsubscribe token
+    $token = bin2hex(random_bytes(32));
+    
     // Add new subscriber
-    $stmt = $pdo->prepare("INSERT INTO newsletter_subscribers (email, name, ip_address, source) VALUES (?, ?, ?, ?)");
-    $stmt->execute([$email, $name, $ip, $source]);
+    $stmt = $pdo->prepare("INSERT INTO newsletter_subscribers (email, name, ip_address, source, unsubscribe_token) VALUES (?, ?, ?, ?, ?)");
+    $stmt->execute([$email, $name, $ip, $source, $token]);
+    
+    // Send welcome email
+    require_once __DIR__ . '/includes/helpers/email-helper.php';
+    sendNewsletterWelcome($email, $name);
     
     echo json_encode(['success' => true, 'message' => 'Thank you for subscribing! Check your email for confirmation']);
     

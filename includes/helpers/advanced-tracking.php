@@ -40,11 +40,11 @@ function hasAnalyticsConsent() {
 }
 
 /**
- * Get location data from IP address using free IP-API service
+ * Get location data from IP address using multiple free services
  */
 function getLocationFromIP($ip) {
     // Don't track localhost
-    if ($ip === '127.0.0.1' || $ip === '::1' || $ip === '0.0.0.0') {
+    if ($ip === '127.0.0.1' || $ip === '::1' || $ip === '0.0.0.0' || strpos($ip, '192.168.') === 0 || strpos($ip, '10.') === 0) {
         return [
             'country' => 'Local',
             'country_code' => 'LC',
@@ -55,30 +55,95 @@ function getLocationFromIP($ip) {
         ];
     }
 
-    // Use ip-api.com free service over HTTPS (no API key needed, 45 req/minute limit)
-    $url = "https://ip-api.com/json/{$ip}?fields=status,country,countryCode,region,city,lat,lon";
+    // Method 1: Try ip-api.com (no API key, 45 req/min limit)
+    $url = "http://ip-api.com/json/{$ip}?fields=status,country,countryCode,region,city,lat,lon";
     
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 2);
-    $response = curl_exec($ch);
-    curl_close($ch);
-    
-    if ($response) {
-        $data = json_decode($response, true);
-        if ($data && $data['status'] === 'success') {
-            return [
-                'country' => $data['country'] ?? 'Unknown',
-                'country_code' => $data['countryCode'] ?? 'XX',
-                'city' => $data['city'] ?? 'Unknown',
-                'region' => $data['region'] ?? 'Unknown',
-                'latitude' => $data['lat'] ?? 0,
-                'longitude' => $data['lon'] ?? 0
-            ];
+    try {
+        // Try with cURL first
+        if (function_exists('curl_init')) {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 3);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            $response = curl_exec($ch);
+            $error = curl_error($ch);
+            curl_close($ch);
+            
+            if ($response && !$error) {
+                $data = json_decode($response, true);
+                if ($data && isset($data['status']) && $data['status'] === 'success') {
+                    return [
+                        'country' => $data['country'] ?? 'Unknown',
+                        'country_code' => $data['countryCode'] ?? 'XX',
+                        'city' => $data['city'] ?? 'Unknown',
+                        'region' => $data['region'] ?? 'Unknown',
+                        'latitude' => $data['lat'] ?? 0,
+                        'longitude' => $data['lon'] ?? 0
+                    ];
+                }
+            }
         }
+        
+        // Method 2: Try with file_get_contents
+        if (ini_get('allow_url_fopen')) {
+            $context = stream_context_create([
+                'http' => [
+                    'timeout' => 3,
+                    'ignore_errors' => true
+                ]
+            ]);
+            $response = @file_get_contents($url, false, $context);
+            
+            if ($response) {
+                $data = json_decode($response, true);
+                if ($data && isset($data['status']) && $data['status'] === 'success') {
+                    return [
+                        'country' => $data['country'] ?? 'Unknown',
+                        'country_code' => $data['countryCode'] ?? 'XX',
+                        'city' => $data['city'] ?? 'Unknown',
+                        'region' => $data['region'] ?? 'Unknown',
+                        'latitude' => $data['lat'] ?? 0,
+                        'longitude' => $data['lon'] ?? 0
+                    ];
+                }
+            }
+        }
+        
+        // Method 3: Try ipapi.co as backup (1000 req/day free, no key needed)
+        $backup_url = "https://ipapi.co/{$ip}/json/";
+        
+        if (function_exists('curl_init')) {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $backup_url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 3);
+            curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            $response = curl_exec($ch);
+            curl_close($ch);
+            
+            if ($response) {
+                $data = json_decode($response, true);
+                if ($data && isset($data['country_name'])) {
+                    return [
+                        'country' => $data['country_name'] ?? 'Unknown',
+                        'country_code' => $data['country_code'] ?? 'XX',
+                        'city' => $data['city'] ?? 'Unknown',
+                        'region' => $data['region'] ?? 'Unknown',
+                        'latitude' => $data['latitude'] ?? 0,
+                        'longitude' => $data['longitude'] ?? 0
+                    ];
+                }
+            }
+        }
+        
+    } catch (Exception $e) {
+        error_log("Geolocation error: " . $e->getMessage());
     }
     
+    // Return unknown if all methods fail
     return [
         'country' => 'Unknown',
         'country_code' => 'XX',

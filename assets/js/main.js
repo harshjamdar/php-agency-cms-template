@@ -327,4 +327,92 @@ document.addEventListener('DOMContentLoaded', () => {
             cookieBanner.classList.add('translate-y-full');
         });
     }
+
+    // --- reCAPTCHA v3 Form Integration ---
+    // Add reCAPTCHA token to contact form
+    const contactForm = document.querySelector('form[action*="submit-inquiry"]');
+    if (contactForm && typeof getRecaptchaToken === 'function') {
+        contactForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn ? submitBtn.innerHTML : '';
+            
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span>Verifying...</span>';
+            }
+            
+            try {
+                const token = await getRecaptchaToken('contact_form');
+                
+                // Add token to form
+                let tokenInput = this.querySelector('input[name="recaptcha_token"]');
+                if (!tokenInput) {
+                    tokenInput = document.createElement('input');
+                    tokenInput.type = 'hidden';
+                    tokenInput.name = 'recaptcha_token';
+                    this.appendChild(tokenInput);
+                }
+                tokenInput.value = token;
+                
+                // Submit form
+                this.submit();
+            } catch (error) {
+                console.error('reCAPTCHA error:', error);
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                }
+                alert('Security verification failed. Please try again.');
+            }
+        });
+    }
+
+    // Add reCAPTCHA token to newsletter form
+    const newsletterForms = document.querySelectorAll('form[action*="newsletter-subscribe"], .newsletter-form');
+    newsletterForms.forEach(form => {
+        if (typeof getRecaptchaToken === 'function') {
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalText = submitBtn ? submitBtn.innerHTML : '';
+                
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<span>Verifying...</span>';
+                }
+                
+                try {
+                    const token = await getRecaptchaToken('newsletter_subscribe');
+                    
+                    const formData = new FormData(this);
+                    formData.append('recaptcha_token', token);
+                    
+                    const response = await fetch(this.action || '/newsletter-subscribe.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        alert(result.message || 'Successfully subscribed!');
+                        this.reset();
+                    } else {
+                        alert(result.message || 'Subscription failed. Please try again.');
+                    }
+                } catch (error) {
+                    console.error('Newsletter subscription error:', error);
+                    alert('An error occurred. Please try again.');
+                } finally {
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalText;
+                    }
+                }
+            });
+        }
+    });
 });

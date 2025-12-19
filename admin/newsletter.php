@@ -33,9 +33,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && validateCSRFToken($_POST['csrf_toke
                         $success = "Subscriber reactivated successfully!";
                     }
                 } else {
-                    // Add new
-                    $stmt = $pdo->prepare("INSERT INTO newsletter_subscribers (email, name, source, ip_address) VALUES (?, ?, 'manual', '127.0.0.1')");
-                    $stmt->execute([$email, $name]);
+                    // Add new with unsubscribe token
+                    $token = bin2hex(random_bytes(32));
+                    $stmt = $pdo->prepare("INSERT INTO newsletter_subscribers (email, name, source, ip_address, unsubscribe_token) VALUES (?, ?, 'manual', '127.0.0.1', ?)");
+                    $stmt->execute([$email, $name, $token]);
                     $success = "Subscriber added successfully!";
                 }
             } catch (PDOException $e) {
@@ -74,9 +75,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && validateCSRFToken($_POST['csrf_toke
                             continue;
                         }
                         
-                        // Add new
-                        $stmt = $pdo->prepare("INSERT INTO newsletter_subscribers (email, name, source, ip_address) VALUES (?, ?, 'bulk_import', '127.0.0.1')");
-                        $stmt->execute([$email, $name]);
+                        // Add new with unsubscribe token
+                        $token = bin2hex(random_bytes(32));
+                        $stmt = $pdo->prepare("INSERT INTO newsletter_subscribers (email, name, source, ip_address, unsubscribe_token) VALUES (?, ?, 'bulk_import', '127.0.0.1', ?)");
+                        $stmt->execute([$email, $name, $token]);
                         $added++;
                     }
                     
